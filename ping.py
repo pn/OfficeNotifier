@@ -17,7 +17,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import subprocess, re
+from subprocess import call
+NULL = open('/dev/null')
 
 class Pinger(object):
     """Wrapper for the system "ping" """
@@ -26,10 +27,7 @@ class Pinger(object):
         self.address = address
     
     def ping(self):
-        pingout = subprocess.Popen( ["ping", "-c", "1", self.address], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
-        if len(re.findall("destination host unreachable", pingout))>0:
-            return False
-        else:
-            r = re.findall("(\d+) received", pingout)
-            return len(r)>0 and int(r[0])>0
+        if call("ping -c 1 %s" % self.address, stdout=NULL, stderr=NULL, shell=True) == 0:
+            return True
+        return False
     
