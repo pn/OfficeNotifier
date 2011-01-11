@@ -31,3 +31,6 @@ class Pinger(object):
             return True
         return False
     
+if __name__ == "__main__":
+	assert Pinger('example.com').ping() == True
+	assert Pinger('badaddress').ping() == False
